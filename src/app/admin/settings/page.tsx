@@ -63,16 +63,16 @@ export default function AdminSettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">ตั้งค่าระบบ</h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">จัดการ API Keys และการตั้งค่าภายนอก</p>
+        <h1 className="text-2xl font-bold text-white">ตั้งค่าระบบ</h1>
+        <p className="text-sm text-[#94A3B8] mt-1">จัดการ API Keys และการตั้งค่าภายนอก</p>
       </div>
 
       <div className="grid gap-6">
         {GROUPS.map(group => (
-          <Card key={group.title}>
+          <Card key={group.title} className="bg-[#1F293D] border-[#2A364F]">
             <CardHeader>
-              <CardTitle>{group.title}</CardTitle>
-              <CardDescription>{group.desc}</CardDescription>
+              <CardTitle className="text-white">{group.title}</CardTitle>
+              <CardDescription className="text-[#94A3B8]">{group.desc}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {group.keys.map(key => {
@@ -82,7 +82,7 @@ export default function AdminSettingsPage() {
                 return (
                   <div key={key} className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor={key} className="text-sm font-medium capitalize">
+                      <Label htmlFor={key} className="text-sm font-medium text-[#94A3B8] capitalize">
                         {key.replace(/_/g, ' ')}
                       </Label>
                       <Badge variant={isSet ? 'default' : 'secondary'} className="text-xs">
@@ -96,13 +96,13 @@ export default function AdminSettingsPage() {
                         value={value}
                         onChange={e => setEditing(prev => ({ ...prev, [key]: e.target.value }))}
                         placeholder={isSensitive ? '••••••••' : `https://...`}
-                        className="h-10 rounded-xl font-mono text-sm"
+                        className="h-10 rounded-xl font-mono text-sm bg-[#0B0F19] border-[#2A364F] text-white placeholder-[#94A3B8]/50"
                       />
                       <Button
                         size="sm"
                         disabled={saving === key || editing[key] === undefined}
                         onClick={() => save(key)}
-                        className="shrink-0 h-10 rounded-xl bg-violet-600 hover:bg-violet-700"
+                        className="shrink-0 h-10 rounded-xl bg-[#00F0FF] text-[#0B0F19] hover:bg-[#00F0FF]/80 font-semibold"
                       >
                         {saving === key ? '...' : 'บันทึก'}
                       </Button>
