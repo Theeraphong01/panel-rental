@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // GET /api/storefront/banks — get tenant's bank accounts
 export async function GET(req: Request) {
   const tenantId = req.headers.get("x-tenant-id");

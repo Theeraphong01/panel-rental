@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // POST /api/storefront/slip — verify slip by image upload
 export async function POST(req: Request) {
   const authHeader = req.headers.get("authorization");

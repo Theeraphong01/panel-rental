@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // Dashboard — Bank Accounts CRUD
 export async function GET(req: Request) {
   const tenantId = req.headers.get("x-tenant-id");

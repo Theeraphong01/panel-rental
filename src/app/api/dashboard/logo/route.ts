@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // Dashboard — Logo Upload
 export async function POST(req: Request) {
   const tenantId = req.headers.get("x-tenant-id");

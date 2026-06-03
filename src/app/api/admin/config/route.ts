@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // Admin — System Config (Slip2Go key, Cloudflare, Voucher)
 export async function GET() {
   const { prisma } = await import("@/lib/prisma");

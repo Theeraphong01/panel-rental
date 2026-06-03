@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // Admin — Package Management (Combo + Slip Topup)
 export async function GET() {
   const { prisma } = await import("@/lib/prisma");

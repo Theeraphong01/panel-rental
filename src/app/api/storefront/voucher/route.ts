@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // POST /api/storefront/voucher — redeem TrueMoney gift voucher
 export async function POST(req: Request) {
   const authHeader = req.headers.get("authorization");

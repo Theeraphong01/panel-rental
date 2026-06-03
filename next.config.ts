@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Don't static-generate any pages (avoids DB connection issues during build)
+  experimental: {
+  },
 };
 
 export default nextConfig;
