@@ -35,5 +35,9 @@ export async function POST(req: NextRequest) {
     const apiKeyEncrypted = encrypt(apiKey);
     const key = await prisma.apiKey.create({ data: { tenantId, label, panelUrl: normalizedUrl, apiKeyEncrypted } });
     return NextResponse.json({ id: key.id, label: key.label, panelUrl: key.panelUrl, maskedKey: maskKey(apiKey), isActive: true }, { status: 201 });
-  } catch { return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); }
+  } catch (err: any) {
+    if (err?.message === 'No tenant') return NextResponse.json({ error: 'ยังไม่มีร้านค้า — กรุณาติดต่อ support' }, { status: 400 });
+    if (err?.message === 'Unauthorized') return NextResponse.json({ error: 'กรุณาเข้าสู่ระบบก่อน' }, { status: 401 });
+    return NextResponse.json({ error: err?.message || 'เกิดข้อผิดพลาด' }, { status: 500 });
+  }
 }

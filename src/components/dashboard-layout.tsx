@@ -24,7 +24,7 @@ import {
 
 const navigation = [
   { name: 'ภาพรวม', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'API Keys', href: '/dashboard/api-keys', icon: Key },
+  { name: 'Panels', href: '/dashboard/api-keys', icon: Key },
   { name: 'บริการ', href: '/dashboard/services', icon: Package },
   { name: 'หมวดหมู่', href: '/dashboard/categories', icon: FolderTree },
   { name: 'ราคา', href: '/dashboard/pricing', icon: DollarSign },

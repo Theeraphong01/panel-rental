@@ -51,7 +51,7 @@ export default function ApiKeysPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ label: f.get('label'), panelUrl: f.get('panelUrl'), apiKey: f.get('apiKey') }),
     });
-    if (res.ok) { toast.success('เพิ่ม API Key สำเร็จ'); setOpen(false); load(); }
+    if (res.ok) { toast.success('เพิ่ม Panel สำเร็จ'); setOpen(false); load(); }
     else { const d = await res.json(); toast.error(d.error || 'เพิ่มไม่สำเร็จ'); }
   }
 
@@ -76,17 +76,17 @@ export default function ApiKeysPage() {
   }
 
   async function removeKey(id: string) {
-    if (!confirm('ยืนยันการลบ API Key นี้?')) return;
+    if (!confirm('ยืนยันการลบ Panel นี้?')) return;
     await fetch(`/api/dashboard/api-keys/${id}`, { method: 'DELETE' });
     load();
-    toast.success('ลบ API Key แล้ว');
+    toast.success('ลบ Panel แล้ว');
   }
 
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <div className="w-8 h-8 border-2 border-[#00F0FF]/30 border-t-[#00F0FF] rounded-full animate-spin" />
-        <p className="mt-4 text-sm text-[#94A3B8]">กำลังโหลด API Keys...</p>
+        <p className="mt-4 text-sm text-[#94A3B8]">กำลังโหลด Panels...</p>
       </div>
     );
   }
@@ -96,15 +96,15 @@ export default function ApiKeysPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">API Keys</h1>
-          <p className="mt-1 text-sm text-[#94A3B8]">จัดการกุญแจเชื่อมต่อกับ Panel ต้นทาง</p>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Panels</h1>
+          <p className="mt-1 text-sm text-[#94A3B8]">จัดการ Panel ต้นทางที่เชื่อมต่อ</p>
         </div>
         <button
           onClick={() => setOpen(true)}
           className="inline-flex items-center gap-2 rounded-lg bg-[#00F0FF] px-5 py-2.5 text-sm font-semibold text-[#0B0F19] hover:bg-[#00F0FF]/80 transition-all"
         >
           <Plus className="w-4 h-4" />
-          เพิ่ม API Key
+          เพิ่ม Panel
         </button>
       </div>
 
@@ -121,7 +121,7 @@ export default function ApiKeysPage() {
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-md rounded-lg border border-[#2A364F] bg-[#1F293D] p-6 shadow-2xl"
             >
-              <h2 className="text-lg font-semibold text-white mb-4">เพิ่ม API Key ใหม่</h2>
+              <h2 className="text-lg font-semibold text-white mb-4">เพิ่ม Panel ใหม่</h2>
               <form onSubmit={addKey} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-[#94A3B8] mb-1">ชื่อ (Label)</label>
@@ -162,10 +162,10 @@ export default function ApiKeysPage() {
       {keys.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <div className="text-5xl mb-4">🔑</div>
-          <h3 className="text-lg font-semibold text-white">ยังไม่มี API Key</h3>
-          <p className="mt-2 text-sm text-[#94A3B8] max-w-sm">เพิ่ม API Key จาก Panel ต้นทางเพื่อเริ่มต้นให้บริการ</p>
-          <button onClick={() => setOpen(true)} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#00F0FF] px-4 py-2 text-sm font-semibold text-[#0B0F19]">
-            <Plus className="w-4 h-4" /> เพิ่ม API Key
+          <h3 class="text-lg font-semibold text-white">ยังไม่มี Panel</h3>
+          <p class="mt-2 text-sm text-[#94A3B8] max-w-sm">เพิ่ม Panel ต้นทางเพื่อเริ่มต้นให้บริการ</p>
+          <button onClick={() => setOpen(true)} class="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#00F0FF] px-4 py-2 text-sm font-semibold text-[#0B0F19]">
+            <Plus class="w-4 h-4" /> เพิ่ม Panel
           </button>
         </div>
       ) : (
@@ -245,7 +245,7 @@ export default function ApiKeysPage() {
             </table>
           </div>
           <div className="px-6 py-3 border-t border-[#2A364F] text-xs text-[#94A3B8]">
-            {keys.length} API Keys
+            {keys.length} Panels
           </div>
         </div>
       )}
