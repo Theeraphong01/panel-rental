@@ -44,7 +44,7 @@ export async function POST(req: Request) {
         body: JSON.stringify({
           type: "CNAME",
           name: subdomain,
-          content: process.env.NEXT_PUBLIC_ROOT_DOMAIN || "panel-rental.com",
+          content: process.env.NEXT_PUBLIC_ROOT_DOMAIN || "1smm.cloud",
           proxied: true,
         }),
       }

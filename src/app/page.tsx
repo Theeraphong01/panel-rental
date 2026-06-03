@@ -705,7 +705,7 @@ export default function Home() {
             <h4 className="font-semibold text-sm mb-3 text-foreground">Contact</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>Line: @panelrental</li>
-              <li>Email: support@panel-rental.com</li>
+              <li>Email: support@1smm.cloud</li>
             </ul>
           </div>
         </div>

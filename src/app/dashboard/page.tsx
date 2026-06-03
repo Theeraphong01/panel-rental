@@ -79,7 +79,8 @@ export default function DashboardOverview() {
     { icon: '📁', label: 'หมวดหมู่', value: String(tenant._count?.categories ?? 0), color: '#00F0FF' },
   ];
 
-  const storeUrl = `https://${tenant.subdomain}.panel-rental.com`;
+  const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || '1smm.cloud';
+  const storeUrl = `https://${tenant.subdomain}.${rootDomain}`;
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="space-y-8">
