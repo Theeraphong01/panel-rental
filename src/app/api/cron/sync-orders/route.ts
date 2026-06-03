@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { syncPendingOrders } from "@/lib/order-sync";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   if (req.headers.get("x-cron-secret") !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
