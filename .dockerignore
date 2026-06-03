@@ -1,0 +1,26 @@
+# .dockerignore — don't send dev files to Docker build context
+node_modules
+.git
+.gitignore
+.next
+dist
+.env
+.env.local
+*.md
+!DEPLOY.md
+!AGENTS.md
+tests
+coverage
+.vscode
+.idea
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+uploads/*
+!uploads/.gitkeep
+backups/*
+!backups/.gitkeep
+certbot_*
+prisma/dev.db
+prisma/dev.db-journal

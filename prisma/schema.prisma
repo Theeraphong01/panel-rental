@@ -1,0 +1,425 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  role         String        @default("customer")
+  tenants      Tenant[]
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Package {
+  id            String         @id @default(uuid())
+  name          String
+  priceMonthly  Int
+  packageType   String         @default("combo")
+  maxApiKeys    Int
+  maxEndUsers   Int?
+  slipQuota     Int            @default(0)
+  premiumThemes Boolean        @default(false)
+  customDomain  Boolean        @default(false)
+  isActive      Boolean        @default(true)
+  subscriptions Subscription[]
+  createdAt     DateTime       @default(now())
+}
+
+model Tenant {
+  id            String             @id @default(uuid())
+  userId        String
+  user          User               @relation(fields: [userId], references: [id])
+  subdomain     String             @unique
+  name          String
+  status        String             @default("trial")
+  trialEndsAt   DateTime?
+  slipCredits   Int                @default(0)
+  logoUrl       String?
+  topupMethods  String             @default("{\"slip\":true,\"wallet\":false}")
+  subscriptions Subscription[]
+  apiKeys       ApiKey[]
+  categories    Category[]
+  services      StorefrontService[]
+  themeConfig   ThemeConfig?
+  customDomains CustomDomain[]
+  endUsers      EndUser[]
+  orderLogs     OrderLog[]
+  themeSubs     ThemeSubscription[]
+  topupPkgs     TopupPackage[]
+  topupSlips    TopupSlip[]
+  endUserOrders EndUserOrder[]
+  endUserTxns   EndUserTransaction[]
+  activityLogs  ActivityLog[]
+  bankAccounts  BankAccount[]
+  contacts      ContactInfo[]
+  slipLogs      SlipVerification[]
+  voucherTxns   VoucherTransaction[]
+  createdAt     DateTime           @default(now())
+}
+
+model Subscription {
+  id                 String   @id @default(uuid())
+  tenantId           String
+  tenant             Tenant   @relation(fields: [tenantId], references: [id])
+  packageId          String
+  package            Package  @relation(fields: [packageId], references: [id])
+  status             String   @default("active")
+  slipCreditsUsed    Int      @default(0)
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  canceledAt         DateTime?
+  createdAt          DateTime @default(now())
+}
+
+model ApiKey {
+  id              String             @id @default(uuid())
+  tenantId        String
+  tenant          Tenant             @relation(fields: [tenantId], references: [id])
+  label           String
+  panelUrl        String
+  apiKeyEncrypted String
+  isActive        Boolean            @default(true)
+  lastCheckedAt   DateTime?
+  balanceSnapshot Int?
+  services        StorefrontService[]
+  orderLogs       OrderLog[]
+  endUserOrders   EndUserOrder[]
+  createdAt       DateTime           @default(now())
+}
+
+model Category {
+  id        String             @id @default(uuid())
+  tenantId  String
+  tenant    Tenant             @relation(fields: [tenantId], references: [id])
+  name      String
+  slug      String
+  sortOrder Int                @default(0)
+  isVisible Boolean            @default(true)
+  services  StorefrontService[]
+  createdAt DateTime           @default(now())
+
+  @@unique([tenantId, slug])
+}
+
+model StorefrontService {
+  id           String          @id @default(uuid())
+  tenantId     String
+  tenant       Tenant          @relation(fields: [tenantId], references: [id])
+  apiKeyId     String
+  apiKey       ApiKey          @relation(fields: [apiKeyId], references: [id])
+  categoryId   String?
+  category     Category?       @relation(fields: [categoryId], references: [id])
+  serviceId    Int
+  name         String
+  description  String?
+  type         String          @default("Default")
+  dripfeed     Boolean         @default(false)
+  panelRefill  Boolean         @default(false)
+  panelCancel  Boolean         @default(false)
+  panelRate    Float
+  priceType    String          @default("percent")
+  priceManual  Int?
+  pricePercent Int             @default(20)
+  minOrder     Int             @default(10)
+  maxOrder     Int             @default(10000)
+  isActive     Boolean         @default(true)
+  isFeatured   Boolean         @default(false)
+  endUserOrders EndUserOrder[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@unique([tenantId, apiKeyId, serviceId])
+}
+
+model Theme {
+  id           String             @id
+  name         String
+  description  String?
+  thumbnailUrl String?
+  isPremium    Boolean            @default(false)
+  priceMonthly Int?
+  isActive     Boolean            @default(true)
+  version      String             @default("1.0")
+  cssFile      String?
+  layoutJson   String?
+  configs      ThemeConfig[]
+  subscriptions ThemeSubscription[]
+  deployGuides ThemeDeployGuide[]
+}
+
+model ThemeConfig {
+  id           String   @id @default(uuid())
+  tenantId     String   @unique
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+  themeId      String   @default("default")
+  theme        Theme    @relation(fields: [themeId], references: [id])
+  primaryColor String   @default("#000000")
+  logoUrl      String?
+  customCss    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ThemeDeployGuide {
+  id          String  @id @default(uuid())
+  themeId     String
+  theme       Theme   @relation(fields: [themeId], references: [id])
+  stepOrder   Int
+  title       String
+  description String
+  targetFile  String?
+  codeSnippet String?
+}
+
+model ThemeSubscription {
+  id        String    @id @default(uuid())
+  tenantId  String
+  tenant    Tenant    @relation(fields: [tenantId], references: [id])
+  themeId   String
+  theme     Theme     @relation(fields: [themeId], references: [id])
+  status    String    @default("active")
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+}
+
+model CustomDomain {
+  id        String   @id @default(uuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  domain    String   @unique
+  verified  Boolean  @default(false)
+  sslStatus String   @default("pending")
+  createdAt DateTime @default(now())
+}
+
+model TopupPackage {
+  id        String      @id @default(uuid())
+  tenantId  String
+  tenant    Tenant      @relation(fields: [tenantId], references: [id])
+  name      String
+  price     Int
+  bonus     Int         @default(0)
+  isActive  Boolean     @default(true)
+  slips     TopupSlip[]
+  createdAt DateTime    @default(now())
+}
+
+model TopupSlip {
+  id             String       @id @default(uuid())
+  tenantId       String
+  tenant         Tenant       @relation(fields: [tenantId], references: [id])
+  endUserId      String
+  endUser        EndUser      @relation(fields: [endUserId], references: [id])
+  topupPackageId String
+  topupPackage   TopupPackage @relation(fields: [topupPackageId], references: [id])
+  amount         Int
+  slipImageUrl   String
+  status         String       @default("pending")
+  reviewedBy     String?
+  reviewedAt     DateTime?
+  createdAt      DateTime     @default(now())
+}
+
+model EndUser {
+  id           String                @id @default(uuid())
+  tenantId     String
+  tenant       Tenant                @relation(fields: [tenantId], references: [id])
+  email        String
+  passwordHash String
+  name         String
+  balance      Int                   @default(0)
+  status       String                @default("active")
+  orders       EndUserOrder[]
+  transactions EndUserTransaction[]
+  slips        TopupSlip[]
+  voucherTxns  VoucherTransaction[]
+  createdAt    DateTime              @default(now())
+
+  @@unique([tenantId, email])
+}
+
+model EndUserOrder {
+  id                  String            @id @default(uuid())
+  endUserId           String
+  endUser             EndUser           @relation(fields: [endUserId], references: [id])
+  tenantId            String
+  tenant              Tenant            @relation(fields: [tenantId], references: [id])
+  storefrontServiceId String
+  storefrontService   StorefrontService @relation(fields: [storefrontServiceId], references: [id])
+  apiKeyId            String
+  apiKey              ApiKey            @relation(fields: [apiKeyId], references: [id])
+  serviceId           Int
+  link                String
+  quantity            Int
+  runs                Int?
+  interval            Int?
+  comments            String?
+  costPrice           Int
+  sellPrice           Int
+  profit              Int
+  panelOrderId        Int?
+  status              String            @default("Pending")
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+}
+
+model EndUserTransaction {
+  id           String   @id @default(uuid())
+  endUserId    String
+  endUser      EndUser  @relation(fields: [endUserId], references: [id])
+  tenantId     String
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+  amount       Int
+  type         String
+  balanceAfter Int
+  reference    String?
+  createdAt    DateTime @default(now())
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Int
+  type      String
+  status    String   @default("pending")
+  reference String?
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id            String   @id @default(uuid())
+  recipientType String
+  recipientId   String
+  type          String
+  title         String
+  message       String
+  link          String?
+  isRead        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@index([recipientType, recipientId, isRead])
+}
+
+model ActivityLog {
+  id         String   @id @default(uuid())
+  tenantId   String?
+  tenant     Tenant?  @relation(fields: [tenantId], references: [id])
+  userId     String?
+  action     String
+  targetType String?
+  targetId   String?
+  metadata   String?
+  createdAt  DateTime @default(now())
+}
+
+model OrderLog {
+  id           String   @id @default(uuid())
+  tenantId     String
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+  apiKeyId     String
+  apiKey       ApiKey   @relation(fields: [apiKeyId], references: [id])
+  serviceId    Int
+  quantity     Int
+  cost         Int
+  price        Int
+  panelOrderId Int
+  status       String
+  createdAt    DateTime @default(now())
+}
+
+// ═══════════════════════════════════════════
+// NEW: Bank Account (tenant receive accounts)
+// ═══════════════════════════════════════════
+model BankAccount {
+  id             String  @id @default(uuid())
+  tenantId       String
+  tenant         Tenant  @relation(fields: [tenantId], references: [id])
+  bankName       String
+  accountNumber  String
+  accountNameTh  String
+  accountNameEn  String
+  isActive       Boolean @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([tenantId, accountNumber])
+}
+
+// ═══════════════════════════════════════════
+// NEW: Contact Info (FB, Line, Email, Phone)
+// ═══════════════════════════════════════════
+model ContactInfo {
+  id        String  @id @default(uuid())
+  tenantId  String
+  tenant    Tenant  @relation(fields: [tenantId], references: [id])
+  type      String
+  value     String
+  label     String?
+  isVisible Boolean @default(true)
+  sortOrder Int     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ═══════════════════════════════════════════
+// NEW: Slip2Go Verification Log
+// ═══════════════════════════════════════════
+model SlipVerification {
+  id              String   @id @default(uuid())
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id])
+  endUserId       String?
+  referenceId     String?
+  transRef        String?  @unique
+  amount          Float?
+  expectedAmount  Float?
+  code            String
+  status          String   @default("pending")
+  receiverAccount String?
+  receiverName    String?
+  senderName      String?
+  rawResponse     String?
+  createdAt       DateTime @default(now())
+}
+
+// ═══════════════════════════════════════════
+// NEW: TrueMoney Voucher Transaction
+// ═══════════════════════════════════════════
+model VoucherTransaction {
+  id          String   @id @default(uuid())
+  tenantId    String
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+  endUserId   String?
+  endUser     EndUser? @relation(fields: [endUserId], references: [id])
+  refLink     String
+  amount      Int?
+  status      String   @default("pending")
+  errorMsg    String?
+  createdAt   DateTime @default(now())
+}
+
+// ═══════════════════════════════════════════
+// NEW: System Config (admin-level settings)
+// ═══════════════════════════════════════════
+model SystemConfig {
+  id    String @id
+  value String
+
+  // Known keys:
+  //   slip2go_api_secret  → encrypted Slip2Go API key
+  //   slip2go_base_url    → Slip2Go API base URL
+  //   voucher_api_url     → TrueMoney voucher endpoint
+  //   voucher_api_key     → voucher admin key
+  //   cloudflare_api_key  → Cloudflare API token
+  //   cloudflare_zone_id  → Cloudflare zone for subdomain auto-create
+}

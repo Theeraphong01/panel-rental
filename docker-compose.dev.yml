@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: panel-db-dev
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: panel
+      POSTGRES_PASSWORD: panel_dev
+      POSTGRES_DB: panel_dev
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U panel -d panel_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  pgdata_dev:
