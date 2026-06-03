@@ -50,7 +50,7 @@ export default function Sidebar({ items, brand, brandHref }: { items: NavItem[];
       <div className="border-t border-zinc-100 dark:border-zinc-800 p-3 space-y-2">
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="w-full flex items-center justify-center rounded-lg p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+          className="w-full flex items-center justify-center rounded-lg p-2 text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 transition-colors"
         >
           {collapsed ? '→' : '←'}
         </button>
