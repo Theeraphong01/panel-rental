@@ -16,7 +16,7 @@ export default function DashboardOverview() {
 
   if (!tenant) return <LoadingState text="กำลังโหลดข้อมูลร้าน..." />;
 
-  const sub = tenant.subscription?.[0];
+  const sub = tenant.subscriptions?.[0];
   const pkg = sub?.package;
   const stats = [
     { icon: '📦', label: 'แพ็คเกจ', value: pkg?.name ?? 'ไม่มี', trend: sub?.status === 'active' ? '+Active' : undefined },

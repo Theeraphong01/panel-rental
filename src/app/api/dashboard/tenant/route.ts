@@ -9,7 +9,7 @@ export async function GET() {
   const tenant = await prisma.tenant.findFirst({
     where: { userId: session.user.id },
     include: {
-      subscription: { include: { package: true }, orderBy: { createdAt: 'desc' }, take: 1 },
+      subscriptions: { include: { package: true }, orderBy: { createdAt: 'desc' }, take: 1 },
       _count: { select: { apiKeys: true, endUsers: true, services: true, categories: true } },
     },
   });
