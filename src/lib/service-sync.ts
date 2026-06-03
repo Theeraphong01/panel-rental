@@ -5,7 +5,7 @@ import { SmmPanelClient } from "./smm-panel";
 export async function syncServices() {
   const apiKeys = await prisma.apiKey.findMany({
     where: { isActive: true },
-    include: { storefrontServices: { where: { isActive: true } } },
+    include: { services: { where: { isActive: true } } },
   });
 
   let totalDisabled = 0;
@@ -19,7 +19,7 @@ export async function syncServices() {
 
       const liveIds = new Set(liveServices.map((s) => s.service));
 
-      for (const dbService of apiKey.storefrontServices) {
+      for (const dbService of apiKey.services) {
         if (!liveIds.has(dbService.serviceId)) {
           await prisma.storefrontService.update({
             where: { id: dbService.id },
@@ -57,8 +57,8 @@ export async function syncServices() {
           metadata: JSON.stringify({
             apiKeyId: apiKey.id,
             liveCount: liveServices.length,
-            dbCount: apiKey.storefrontServices.length,
-            disabled: apiKey.storefrontServices.filter((s) => !liveIds.has(s.serviceId)).length,
+            dbCount: apiKey.services.length,
+            disabled: apiKey.services.filter((s) => !liveIds.has(s.serviceId)).length,
           }),
         },
       });
