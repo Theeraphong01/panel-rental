@@ -2,13 +2,30 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PageHeader, GlassPanel, StatusBadge, LoadingState, EmptyState } from '@/components/premium';
 import { toast } from 'sonner';
+import { Plus, TestTube, Power, PowerOff, Trash2 } from 'lucide-react';
 
 function maskKey(key: string): string {
   if (!key) return '••••';
   if (key.length <= 8) return '••••••••';
   return key.slice(0, 4) + '••••••••' + key.slice(-4);
+}
+
+function StatusBadge({ status }: { status: string }) {
+  const colors: Record<string, string> = {
+    active: 'bg-[#00E676]/10 text-[#00E676] border-[#00E676]/30',
+    completed: 'bg-[#00E676]/10 text-[#00E676] border-[#00E676]/30',
+    pending: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+    cancelled: 'bg-red-500/10 text-red-400 border-red-500/30',
+    failed: 'bg-red-500/10 text-red-400 border-red-500/30',
+    inactive: 'bg-[#94A3B8]/20 text-[#94A3B8] border-[#94A3B8]/30',
+  };
+  const c = colors[status.toLowerCase()] || 'bg-[#94A3B8]/10 text-[#94A3B8] border-[#94A3B8]/30';
+  return (
+    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${c}`}>
+      {status}
+    </span>
+  );
 }
 
 export default function ApiKeysPage() {
@@ -65,86 +82,73 @@ export default function ApiKeysPage() {
     toast.success('ลบ API Key แล้ว');
   }
 
-  if (loading) return <LoadingState text="กำลังโหลด API Keys..." />;
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="w-8 h-8 border-2 border-[#00F0FF]/30 border-t-[#00F0FF] rounded-full animate-spin" />
+        <p className="mt-4 text-sm text-[#94A3B8]">กำลังโหลด API Keys...</p>
+      </div>
+    );
+  }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="space-y-8"
-    >
-      <PageHeader
-        title="API Keys"
-        desc="จัดการกุญแจเชื่อมต่อกับ Panel ต้นทาง"
-        action={
-          <button
-            onClick={() => setOpen(true)}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-2.5 text-sm font-semibold text-white hover:from-violet-500 hover:to-fuchsia-500 transition-all shadow-lg shadow-violet-500/20"
-          >
-            + เพิ่ม API Key
-          </button>
-        }
-      />
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">API Keys</h1>
+          <p className="mt-1 text-sm text-[#94A3B8]">จัดการกุญแจเชื่อมต่อกับ Panel ต้นทาง</p>
+        </div>
+        <button
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center gap-2 rounded-lg bg-[#00F0FF] px-5 py-2.5 text-sm font-semibold text-[#0B0F19] hover:bg-[#00F0FF]/80 transition-all"
+        >
+          <Plus className="w-4 h-4" />
+          เพิ่ม API Key
+        </button>
+      </div>
 
       {/* Add Form Modal */}
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              onClick={e => e.stopPropagation()}
-              className="w-full max-w-md rounded-2xl border border-white/10 bg-zinc-900 p-6 shadow-2xl"
+              initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-md rounded-lg border border-[#2A364F] bg-[#1F293D] p-6 shadow-2xl"
             >
               <h2 className="text-lg font-semibold text-white mb-4">เพิ่ม API Key ใหม่</h2>
               <form onSubmit={addKey} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-zinc-300 mb-1">ชื่อ (Label)</label>
+                  <label className="block text-sm font-medium text-[#94A3B8] mb-1">ชื่อ (Label)</label>
                   <input
-                    name="label"
-                    placeholder="เช่น PumLF"
-                    required
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-violet-500/50 focus:outline-none focus:ring-1 focus:ring-violet-500/30 transition-all"
+                    name="label" placeholder="เช่น PumLF" required
+                    className="w-full rounded-lg border border-[#2A364F] bg-[#0B0F19] px-4 py-2.5 text-sm text-white placeholder-[#94A3B8]/50 focus:border-[#00F0FF]/50 focus:outline-none focus:ring-1 focus:ring-[#00F0FF]/30 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-300 mb-1">Panel URL</label>
+                  <label className="block text-sm font-medium text-[#94A3B8] mb-1">Panel URL</label>
                   <input
-                    name="panelUrl"
-                    placeholder="https://pumlf.com/api/v2"
-                    required
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-violet-500/50 focus:outline-none focus:ring-1 focus:ring-violet-500/30 transition-all"
+                    name="panelUrl" placeholder="https://pumlf.com/api/v2" required
+                    className="w-full rounded-lg border border-[#2A364F] bg-[#0B0F19] px-4 py-2.5 text-sm text-white placeholder-[#94A3B8]/50 focus:border-[#00F0FF]/50 focus:outline-none focus:ring-1 focus:ring-[#00F0FF]/30 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-300 mb-1">API Key</label>
+                  <label className="block text-sm font-medium text-[#94A3B8] mb-1">API Key</label>
                   <input
-                    name="apiKey"
-                    type="password"
-                    placeholder="••••••••"
-                    required
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-violet-500/50 focus:outline-none focus:ring-1 focus:ring-violet-500/30 transition-all"
+                    name="apiKey" type="password" placeholder="••••••••" required
+                    className="w-full rounded-lg border border-[#2A364F] bg-[#0B0F19] px-4 py-2.5 text-sm text-white placeholder-[#94A3B8]/50 focus:border-[#00F0FF]/50 focus:outline-none focus:ring-1 focus:ring-[#00F0FF]/30 transition-all"
                   />
                 </div>
                 <div className="flex gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setOpen(false)}
-                    className="flex-1 rounded-xl border border-white/10 px-4 py-2.5 text-sm text-zinc-400 hover:bg-white/5 transition-colors"
-                  >
+                  <button type="button" onClick={() => setOpen(false)} className="flex-1 rounded-lg border border-[#2A364F] px-4 py-2.5 text-sm text-[#94A3B8] hover:bg-[#0B0F19]/50 transition-colors">
                     ยกเลิก
                   </button>
-                  <button
-                    type="submit"
-                    className="flex-1 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2.5 text-sm font-semibold text-white hover:from-violet-500 hover:to-fuchsia-500 transition-all"
-                  >
+                  <button type="submit" className="flex-1 rounded-lg bg-[#00F0FF] px-4 py-2.5 text-sm font-semibold text-[#0B0F19] hover:bg-[#00F0FF]/80 transition-all">
                     บันทึก
                   </button>
                 </div>
@@ -155,97 +159,94 @@ export default function ApiKeysPage() {
       </AnimatePresence>
 
       {keys.length === 0 ? (
-        <EmptyState
-          icon="🔑"
-          title="ยังไม่มี API Key"
-          desc="เพิ่ม API Key จาก Panel ต้นทางเพื่อเริ่มต้นให้บริการ"
-          action={
-            <button
-              onClick={() => setOpen(true)}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2 text-sm font-semibold text-white"
-            >
-              + เพิ่ม API Key
-            </button>
-          }
-        />
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="text-5xl mb-4">🔑</div>
+          <h3 className="text-lg font-semibold text-white">ยังไม่มี API Key</h3>
+          <p className="mt-2 text-sm text-[#94A3B8] max-w-sm">เพิ่ม API Key จาก Panel ต้นทางเพื่อเริ่มต้นให้บริการ</p>
+          <button onClick={() => setOpen(true)} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#00F0FF] px-4 py-2 text-sm font-semibold text-[#0B0F19]">
+            <Plus className="w-4 h-4" /> เพิ่ม API Key
+          </button>
+        </div>
       ) : (
-        <GlassPanel className="!p-0 overflow-hidden">
-          {/* Table Header */}
-          <div className="hidden md:grid grid-cols-[1fr_180px_180px_100px_100px_160px] gap-4 px-6 py-3 text-xs font-medium text-zinc-500 border-b border-white/5">
-            <span>ชื่อ / Panel URL</span>
-            <span>API Key</span>
-            <span>คงเหลือ</span>
-            <span>สถานะ</span>
-            <span>ทดสอบแล้ว</span>
-            <span>จัดการ</span>
+        <div className="rounded-lg border border-[#2A364F] bg-[#1F293D] overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-[#2A364F] text-xs text-[#94A3B8]">
+                  <th className="text-left px-6 py-3 font-medium">ชื่อ / Panel URL</th>
+                  <th className="text-left px-6 py-3 font-medium">API Key</th>
+                  <th className="text-right px-6 py-3 font-medium">คงเหลือ</th>
+                  <th className="text-center px-6 py-3 font-medium">สถานะ</th>
+                  <th className="text-center px-6 py-3 font-medium">ทดสอบแล้ว</th>
+                  <th className="text-right px-6 py-3 font-medium">จัดการ</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#2A364F]">
+                {keys.map((k, i) => (
+                  <motion.tr
+                    key={k.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="hover:bg-[#0B0F19]/30 transition-colors"
+                  >
+                    <td className="px-6 py-3.5 min-w-0">
+                      <p className="text-sm font-medium text-white truncate">{k.label}</p>
+                      <p className="text-xs text-[#94A3B8] truncate">{k.panelUrl}</p>
+                    </td>
+                    <td className="px-6 py-3.5">
+                      <code className="inline-block text-xs font-mono text-[#94A3B8] bg-[#0B0F19]/50 rounded px-2 py-1 max-w-full truncate">
+                        {maskKey(k.apiKeyEncrypted)}
+                      </code>
+                    </td>
+                    <td className="px-6 py-3.5 text-right">
+                      <span className="text-sm font-medium text-white">
+                        {k.balanceSnapshot != null ? `฿${(k.balanceSnapshot / 100).toFixed(2)}` : <span className="text-[#94A3B8]/50">—</span>}
+                      </span>
+                    </td>
+                    <td className="px-6 py-3.5 text-center">
+                      <StatusBadge status={k.isActive ? 'active' : 'inactive'} />
+                    </td>
+                    <td className="px-6 py-3.5 text-center">
+                      <span className="text-xs text-[#94A3B8]">
+                        {k.lastTestedAt ? new Date(k.lastTestedAt).toLocaleDateString('th-TH') : '—'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-3.5 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          onClick={() => testKey(k.id)}
+                          disabled={testing === k.id}
+                          className="rounded-lg border border-[#2A364F] px-3 py-1.5 text-xs text-[#94A3B8] hover:bg-[#0B0F19]/50 disabled:opacity-50 transition-colors"
+                          title="ทดสอบ"
+                        >
+                          <TestTube className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => toggleActive(k.id, k.isActive)}
+                          className="rounded-lg border border-[#2A364F] px-3 py-1.5 text-xs text-[#94A3B8] hover:bg-[#0B0F19]/50 transition-colors"
+                          title={k.isActive ? 'ปิด' : 'เปิด'}
+                        >
+                          {k.isActive ? <PowerOff className="w-3.5 h-3.5" /> : <Power className="w-3.5 h-3.5" />}
+                        </button>
+                        <button
+                          onClick={() => removeKey(k.id)}
+                          className="rounded-lg border border-red-500/20 px-3 py-1.5 text-xs text-red-400 hover:bg-red-500/10 transition-colors"
+                          title="ลบ"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <div className="divide-y divide-white/5">
-            {keys.map((k, i) => (
-              <motion.div
-                key={k.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="grid grid-cols-1 md:grid-cols-[1fr_180px_180px_100px_100px_160px] gap-2 md:gap-4 px-6 py-4 hover:bg-white/[0.03] transition-colors items-center"
-              >
-                {/* Name + URL (stacked on mobile) */}
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{k.label}</p>
-                  <p className="text-xs text-zinc-500 truncate">{k.panelUrl}</p>
-                </div>
-
-                {/* Masked Key */}
-                <div>
-                  <code className="inline-block text-xs font-mono text-zinc-400 bg-white/5 rounded-lg px-2 py-1 max-w-full truncate">
-                    {maskKey(k.apiKeyEncrypted)}
-                  </code>
-                </div>
-
-                {/* Balance */}
-                <div>
-                  <span className="text-sm font-medium text-white">
-                    {k.balanceSnapshot != null ? `฿${(k.balanceSnapshot / 100).toFixed(2)}` : <span className="text-zinc-600">—</span>}
-                  </span>
-                </div>
-
-                {/* Status */}
-                <div>
-                  <StatusBadge status={k.isActive ? 'active' : 'inactive'} />
-                </div>
-
-                {/* Last tested */}
-                <div>
-                  <span className="text-xs text-zinc-500">
-                    {k.lastTestedAt ? new Date(k.lastTestedAt).toLocaleDateString('th-TH') : '—'}
-                  </span>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <button
-                    onClick={() => testKey(k.id)}
-                    disabled={testing === k.id}
-                    className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-zinc-300 hover:bg-white/10 disabled:opacity-50 transition-colors"
-                  >
-                    {testing === k.id ? '⏳' : '🔄'}
-                  </button>
-                  <button
-                    onClick={() => toggleActive(k.id, k.isActive)}
-                    className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-zinc-300 hover:bg-white/10 transition-colors"
-                  >
-                    {k.isActive ? 'ปิด' : 'เปิด'}
-                  </button>
-                  <button
-                    onClick={() => removeKey(k.id)}
-                    className="rounded-lg border border-red-500/20 px-3 py-1.5 text-xs text-red-400 hover:bg-red-500/10 transition-colors"
-                  >
-                    ลบ
-                  </button>
-                </div>
-              </motion.div>
-            ))}
+          <div className="px-6 py-3 border-t border-[#2A364F] text-xs text-[#94A3B8]">
+            {keys.length} API Keys
           </div>
-        </GlassPanel>
+        </div>
       )}
     </motion.div>
   );

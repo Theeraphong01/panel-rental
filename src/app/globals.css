@@ -84,37 +84,38 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* CodeRocket palette */
+  --background: #0B0F19;
+  --foreground: #FFFFFF;
+  --card: #1F293D;
+  --card-foreground: #FFFFFF;
+  --popover: #121824;
+  --popover-foreground: #FFFFFF;
+  --primary: #00F0FF;
+  --primary-foreground: #0B0F19;
+  --secondary: #1F293D;
+  --secondary-foreground: #FFFFFF;
+  --muted: #1F293D;
+  --muted-foreground: #94A3B8;
+  --accent: #00F0FF;
+  --accent-foreground: #0B0F19;
+  --destructive: #FF4D4D;
+  --border: #2A364F;
+  --input: #1F293D;
+  --ring: #00F0FF;
+  --chart-1: #00F0FF;
+  --chart-2: #00E676;
+  --chart-3: #FF4D4D;
+  --chart-4: #94A3B8;
+  --chart-5: #1F293D;
+  --sidebar: #121824;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #00F0FF;
+  --sidebar-primary-foreground: #0B0F19;
+  --sidebar-accent: #1F293D;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #2A364F;
+  --sidebar-ring: #00F0FF;
 }
 
 @layer base {

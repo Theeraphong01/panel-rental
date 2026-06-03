@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { motion } from 'framer-motion';
+import { Sparkles, Zap, TrendingUp, ArrowLeft, Mail, Lock, User, Store, UserPlus, Activity, ShieldCheck, Check } from 'lucide-react';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -28,7 +27,7 @@ export default function SignUpPage() {
     });
     const data = await res.json();
     if (!res.ok) {
-      setError(data.error || 'เกิดข้อผิดพลาด กรุณาลองใหม่');
+      setError(data.error || 'An error occurred. Please try again.');
     } else {
       router.push('/signin?registered=true');
     }
@@ -36,67 +35,198 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left - Brand */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-violet-600 to-indigo-600 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-violet-400/20 via-transparent to-transparent" />
-        <div className="relative flex flex-col justify-center px-16 text-white">
-          <Link href="/" className="flex items-center gap-2 mb-16">
-            <div className="h-9 w-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center font-bold text-white">P</div>
-            <span className="font-bold text-xl tracking-tight">Panel<span className="text-violet-200">Rental</span></span>
-          </Link>
-          <h2 className="text-4xl font-bold leading-tight">เริ่มต้นธุรกิจ<br/>SMM Panel ของคุณ</h2>
-          <p className="mt-4 text-lg text-violet-100 leading-relaxed max-w-md">
-            สมัครฟรีวันนี้ เปิดร้านใน 5 นาที ไม่ต้องติดตั้งอะไรเลย
-          </p>
-          <div className="mt-12 space-y-4">
-            {['ผูก API Key ที่คุณมีอยู่', 'ตั้งราคาและธีมที่คุณต้องการ', 'ส่งลิงก์ให้ลูกค้า — รับรายได้ทันที'].map((s, i) => (
+    <div className="min-h-screen flex bg-background">
+      {/* Left — Brand Panel */}
+      <div className="hidden lg:flex lg:w-1/2 bg-sidebar relative overflow-hidden">
+        {/* Background glow */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-chart-2/10" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/15 rounded-full blur-[128px] -translate-x-1/4 translate-y-1/4" />
+        <div className="absolute top-0 right-0 w-80 h-80 bg-chart-2/10 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/3" />
+
+        <div className="relative flex flex-col justify-center px-16 w-full">
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Link href="/" className="inline-flex items-center gap-2 mb-16 group">
+              <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center font-bold text-primary-foreground shadow-lg shadow-primary/25 group-hover:shadow-primary/40 transition-shadow">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <span className="font-bold text-xl tracking-tight text-foreground">
+                Panel<span className="text-primary [text-shadow:0_0_10px_rgba(0,240,255,0.6)]">Rental</span>
+              </span>
+            </Link>
+          </motion.div>
+
+          {/* Heading */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+          >
+            <h2 className="text-4xl font-bold leading-tight text-foreground">
+              Start Your<br />SMM Panel Business
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground leading-relaxed max-w-md">
+              Sign up free today. Launch your store in 5 minutes — no installation required.
+            </p>
+          </motion.div>
+
+          {/* Steps */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-12 space-y-4"
+          >
+            {[
+              'Connect your existing API key',
+              'Set your pricing and theme',
+              'Share your link — start earning',
+            ].map((step, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="h-6 w-6 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold">{i + 1}</div>
-                <span className="text-violet-100">{s}</span>
+                <div className="h-8 w-8 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center text-sm font-bold text-primary">
+                  {i + 1}
+                </div>
+                <span className="text-muted-foreground text-sm">{step}</span>
               </div>
             ))}
-          </div>
+          </motion.div>
+
+          {/* Trust indicators */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.45 }}
+            className="mt-10 flex gap-6"
+          >
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-chart-2" />
+              <span className="text-xs text-muted-foreground">Secure & Encrypted</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Zap className="w-4 h-4 text-primary" />
+              <span className="text-xs text-muted-foreground">5-min Setup</span>
+            </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* Right - Form */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-white dark:bg-zinc-950">
-        <div className="w-full max-w-sm">
-          <Link href="/" className="lg:hidden flex items-center gap-2 mb-12 justify-center">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs">P</div>
-            <span className="font-bold text-lg">PanelRental</span>
-          </Link>
+      {/* Right — Form */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-background">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-sm"
+        >
+          {/* Back link + mobile logo */}
+          <div className="flex items-center justify-between mb-10">
+            <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </Link>
+            <Link href="/" className="lg:hidden flex items-center gap-2">
+              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">
+                <Sparkles className="w-3 h-3" />
+              </div>
+              <span className="font-bold text-sm">PanelRental</span>
+            </Link>
+          </div>
 
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">สมัครสมาชิก</h1>
-          <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">สร้างบัญชีฟรี เริ่มต้นใช้งานทันที</p>
+          <h1 className="text-2xl font-bold text-foreground">Create Account</h1>
+          <p className="mt-2 text-sm text-muted-foreground">Start your free SMM Panel store today</p>
 
           <form onSubmit={onSubmit} className="mt-8 space-y-5">
+            {/* Store Name */}
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-medium">ชื่อร้านค้า</Label>
-              <Input id="name" name="name" type="text" placeholder="ชื่อร้าน SMM ของคุณ" required className="h-11 rounded-xl" />
+              <label htmlFor="name" className="text-sm font-medium text-foreground">Store Name</label>
+              <div className="relative">
+                <Store className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="My SMM Store"
+                  required
+                  className="w-full h-11 pl-10 pr-4 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
+                />
+              </div>
             </div>
+
+            {/* Email */}
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">อีเมล</Label>
-              <Input id="email" name="email" type="email" placeholder="you@example.com" required className="h-11 rounded-xl" />
+              <label htmlFor="email" className="text-sm font-medium text-foreground">Email</label>
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                  className="w-full h-11 pl-10 pr-4 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
+                />
+              </div>
             </div>
+
+            {/* Password */}
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium">รหัสผ่าน</Label>
-              <Input id="password" name="password" type="password" placeholder="อย่างน้อย 6 ตัวอักษร" required className="h-11 rounded-xl" />
+              <label htmlFor="password" className="text-sm font-medium text-foreground">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="At least 6 characters"
+                  required
+                  minLength={6}
+                  className="w-full h-11 pl-10 pr-4 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm"
+                />
+              </div>
             </div>
+
+            {/* Error */}
             {error && (
-              <div className="rounded-xl bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 p-3 text-sm text-red-600 dark:text-red-400">{error}</div>
+              <motion.div
+                initial={{ opacity: 0, y: -5 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-xl bg-destructive/10 border border-destructive/30 p-3 text-sm text-destructive"
+              >
+                {error}
+              </motion.div>
             )}
-            <Button type="submit" className="w-full h-11 rounded-xl text-base font-semibold bg-violet-600 hover:bg-violet-700" disabled={loading}>
-              {loading ? 'กำลังสมัคร...' : 'สมัครสมาชิก'}
-            </Button>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 hover:bg-primary/90 active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-primary/25"
+            >
+              {loading ? (
+                <span className="inline-flex items-center gap-2">
+                  <Activity className="w-4 h-4 animate-spin" />
+                  Creating account...
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-2">
+                  <UserPlus className="w-4 h-4" />
+                  Create Account
+                </span>
+              )}
+            </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
-            มีบัญชีอยู่แล้ว?{' '}
-            <Link href="/signin" className="font-semibold text-violet-600 hover:text-violet-700">เข้าสู่ระบบ</Link>
+          <p className="mt-6 text-center text-sm text-muted-foreground">
+            Already have an account?{' '}
+            <Link href="/signin" className="font-semibold text-primary hover:text-primary/80 transition-colors">
+              Sign In
+            </Link>
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
