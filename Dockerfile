@@ -7,8 +7,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
-RUN npm ci --only=production && \
-    npx prisma generate
+RUN npm ci && npx prisma generate
 
 # ── Builder ──
 FROM base AS builder
@@ -33,6 +32,10 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+
+# Install production deps only for the standalone output
+COPY package.json ./
+RUN npm ci --omit=dev --ignore-scripts
 
 USER nextjs
 
