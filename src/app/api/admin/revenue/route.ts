@@ -15,7 +15,13 @@ export async function GET() {
   ]);
 
   const trialTenants = await prisma.tenant.count({ where: { status: 'trial' } });
-  const mrr = activeSubs > 0 ? await prisma.subscription.aggregate({ where: { status: 'active' }, _avg: { currentPeriodEnd: true } }) : null;
+
+  // MRR = sum of package prices for active subscriptions
+  const activeSubscriptions = await prisma.subscription.findMany({
+    where: { status: 'active' },
+    include: { package: true },
+  });
+  const mrr = activeSubscriptions.reduce((sum, sub) => sum + sub.package.priceMonthly, 0);
 
   const packages = await prisma.package.findMany({
     include: { _count: { select: { subscriptions: true } } },
@@ -26,6 +32,7 @@ export async function GET() {
     activeTenants,
     trialTenants,
     activeSubs: activeSubs,
+    mrr,
     totalRevenue: totalRevenue._sum.amount ?? 0,
     packages: packages.map(p => ({ name: p.name, price: p.priceMonthly, subscriptions: p._count.subscriptions })),
   });

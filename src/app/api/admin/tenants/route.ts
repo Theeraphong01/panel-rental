@@ -9,7 +9,7 @@ export async function GET() {
   const tenants = await prisma.tenant.findMany({
     include: {
       user: { select: { email: true, name: true } },
-      subscription: { include: { package: true }, orderBy: { createdAt: 'desc' }, take: 1 },
+      subscriptions: { include: { package: true }, orderBy: { createdAt: 'desc' }, take: 1 },
       _count: { select: { apiKeys: true, endUsers: true, services: true } },
     },
     orderBy: { createdAt: 'desc' },
