@@ -30,12 +30,12 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${DB_USER:***@db:5432/${DB_NAME:-panelrental}
-      AUTH_SECRET: ${AUTH_SECRET}
-      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
-      CRON_SECRET: ${CRON_SECRET}
-      NEXTAUTH_URL: ${NEXTAUTH_URL:-https://panel-rental.com}
-      SERVER_PUBLIC_IP: ${SERVER_PUBLIC_IP}
+      - DATABASE_URL
+      - AUTH_SECRET
+      - ENCRYPTION_KEY
+      - CRON_SECRET
+      - NEXTAUTH_URL
+      - SERVER_PUBLIC_IP
     ports:
       - "127.0.0.1:3000:3000"
     volumes:
