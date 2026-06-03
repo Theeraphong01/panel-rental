@@ -28,11 +28,33 @@ interface BalanceResult {
   currency: string;
 }
 
+/**
+ * Normalize a user-entered Panel URL to the standard API v2 endpoint.
+ * Accepts: "pumlf.com", "https://pumlf.com", "https://pumlf.com/", "https://pumlf.com/api/v2"
+ * Returns: "https://pumlf.com/api/v2"
+ */
+export function normalizePanelUrl(raw: string): string {
+  let url = raw.trim();
+  // Add protocol if missing
+  if (!/^https?:\/\//i.test(url)) {
+    url = 'https://' + url;
+  }
+  // Remove trailing slash
+  url = url.replace(/\/+$/, '');
+  // Append /api/v2 if not already present
+  if (!/\/api\/v2\/?$/i.test(url)) {
+    url = url + '/api/v2';
+  }
+  return url;
+}
+
 export class SmmPanelClient {
   constructor(
     private panelUrl: string,
     private apiKey: string
-  ) {}
+  ) {
+    this.panelUrl = normalizePanelUrl(panelUrl);
+  }
 
   private async post(action: string, params: Record<string, string | number> = {}) {
     const body = new URLSearchParams({ key: this.apiKey, action });

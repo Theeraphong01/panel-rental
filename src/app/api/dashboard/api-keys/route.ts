@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { encrypt, maskKey } from '@/lib/encryption';
+import { normalizePanelUrl } from '@/lib/smm-panel';
 
 async function getTenantId() {
   const session = await auth();
@@ -30,8 +31,9 @@ export async function POST(req: NextRequest) {
     const { tenantId } = await getTenantId();
     const { label, panelUrl, apiKey } = await req.json();
     if (!label || !panelUrl || !apiKey) return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+    const normalizedUrl = normalizePanelUrl(panelUrl);
     const apiKeyEncrypted = encrypt(apiKey);
-    const key = await prisma.apiKey.create({ data: { tenantId, label, panelUrl, apiKeyEncrypted } });
+    const key = await prisma.apiKey.create({ data: { tenantId, label, panelUrl: normalizedUrl, apiKeyEncrypted } });
     return NextResponse.json({ id: key.id, label: key.label, panelUrl: key.panelUrl, maskedKey: maskKey(apiKey), isActive: true }, { status: 201 });
   } catch { return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); }
 }

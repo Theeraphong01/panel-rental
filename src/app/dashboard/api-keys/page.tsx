@@ -133,9 +133,10 @@ export default function ApiKeysPage() {
                 <div>
                   <label className="block text-sm font-medium text-[#94A3B8] mb-1">Panel URL</label>
                   <input
-                    name="panelUrl" placeholder="https://pumlf.com/api/v2" required
+                    name="panelUrl" placeholder="pumlf.com" required
                     className="w-full rounded-lg border border-[#2A364F] bg-[#0B0F19] px-4 py-2.5 text-sm text-white placeholder-[#94A3B8]/50 focus:border-[#00F0FF]/50 focus:outline-none focus:ring-1 focus:ring-[#00F0FF]/30 transition-all"
                   />
+                  <p className="mt-1 text-xs text-[#94A3B8]/60">ใส่แค่เว็บไซต์ก็พอ เช่น pumlf.com, smmgen.com — ระบบจัดการ api/v2 ให้เอง</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[#94A3B8] mb-1">API Key</label>
